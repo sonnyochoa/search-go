@@ -47,7 +47,7 @@ type (
 		ManagingEditor string   `xml:"managingEditor"`
 		WebMaster      string   `xml:"webMaster"`
 		Image          image    `xml:"image"`
-		Item           item     `xml:"item"`
+		Item           []item   `xml:"item"`
 	}
 
 	// rssDocument defines the fields associated with the rss document
