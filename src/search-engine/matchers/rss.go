@@ -15,45 +15,45 @@ type (
 	// item defines the fields associated with the item tag
 	// in the rss document
 	item struct {
-		XMLName xml.Name `xml:"item"`
-		PubDate string	`xml:"pubDate"`
-		Title	string	`xml:"title"`
-		Description	string	`xml:"description"`
-		Link	string	`xml:"link"`
-		GUID	string	`xml:"guid"`
-		GeoRssPoint	string	`xml:"georss:point"`
+		XMLName     xml.Name `xml:"item"`
+		PubDate     string   `xml:"pubDate"`
+		Title       string   `xml:"title"`
+		Description string   `xml:"description"`
+		Link        string   `xml:"link"`
+		GUID        string   `xml:"guid"`
+		GeoRssPoint string   `xml:"georss:point"`
 	}
 
 	// image defines the fields associated with the image tag
 	// in the rss documents
 	image struct {
 		XMLName xml.Name `xml:"image"`
-		URL	string	`xml:"url"`
-		Title	string `xml:"title"`
-		Link	string	`xml:"link"`
+		URL     string   `xml:"url"`
+		Title   string   `xml:"title"`
+		Link    string   `xml:"link"`
 	}
 
 	// channel defines the fields associated with the channel tag
 	// in the rss document
 	channel struct {
-		XMLName	xml.Name	`xml:"channel"`
-		Title	string	`xml:"title"`
-		Description	string	`xml:"description"`
-		Link	string	`xml:"link"`
-		PubDate	string	`xml:"pubDate"`
-		LastBuildDate	string	`xml:"lastBuildDate"`
-		TTL	string	`xml:"ttl"`
-		Language	string	`xml:"language"`
-		ManagingEditor	string	`xml:"managingEditor"`
-		WebMaster	string	`xml:"webMaster"`
-		Image	image	`xml:"image"`
-		Item	item	`xml:"item"`
+		XMLName        xml.Name `xml:"channel"`
+		Title          string   `xml:"title"`
+		Description    string   `xml:"description"`
+		Link           string   `xml:"link"`
+		PubDate        string   `xml:"pubDate"`
+		LastBuildDate  string   `xml:"lastBuildDate"`
+		TTL            string   `xml:"ttl"`
+		Language       string   `xml:"language"`
+		ManagingEditor string   `xml:"managingEditor"`
+		WebMaster      string   `xml:"webMaster"`
+		Image          image    `xml:"image"`
+		Item           item     `xml:"item"`
 	}
 
 	// rssDocument defines the fields associated with the rss document
 	rssDocument struct {
-		XMLName xml.Name	`xml:"rss"`
-		Channel	channel	`xml:"channel"`
+		XMLName xml.Name `xml:"rss"`
+		Channel channel  `xml:"channel"`
 	}
 )
 
@@ -80,21 +80,21 @@ func (m rssMatcher) Search(feed *search.Feed, searchTerm string) ([]*search.Resu
 
 	for _, channelItem := range document.Channel.Item {
 		// Check the title for the search term.
-		matched, err := regex.MatchString(searchTerm, channelItem.Title)
+		matched, err := regexp.MatchString(searchTerm, channelItem.Title)
 		if err != nil {
 			return nil, err
 		}
 
 		// If we found a match save the result.
 		if matched {
-			results = append(results, &search.Result {
-				Field: "Title"
-				Content: channelItem.Title, 
+			results = append(results, &search.Result{
+				Field:   "Title",
+				Content: channelItem.Title,
 			})
 		}
 
 		// Check the description for the search term.
-		matched, err = regex.MatchString(searchTerm, channelItem.Description)
+		matched, err = regexp.MatchString(searchTerm, channelItem.Description)
 		if err != nil {
 			return nil, err
 		}
@@ -102,8 +102,8 @@ func (m rssMatcher) Search(feed *search.Feed, searchTerm string) ([]*search.Resu
 		// If we found a match a fe the result.
 		if matched {
 			results = append(results, &search.Result{
-				Filed: "Description",
-				Content, channelItem.Description,
+				Field:   "Description",
+				Content: channelItem.Description,
 			})
 		}
 	}
@@ -129,7 +129,7 @@ func (m rssMatcher) retrieve(feed *search.Feed) (*rssDocument, error) {
 	// Check the status code for a 200 so we know we have received a
 	// proper response
 	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("HTTP Response Erro %d\n", resp.StatusCode)
+		return nil, fmt.Errorf("HTTP Response Error %d\n", resp.StatusCode)
 	}
 
 	// Decode the rss feed document into our struct type.
